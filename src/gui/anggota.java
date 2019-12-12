@@ -37,6 +37,7 @@ public class anggota extends javax.swing.JFrame {
         model.addColumn("no hp");
         model.addColumn("alamat");
         ambil_data_anggota();
+        
     }
     private void ambil_data_anggota(){
         model.getDataVector().removeAllElements();
@@ -73,7 +74,36 @@ public class anggota extends javax.swing.JFrame {
             }
         }
     }
-    
+    public void insertDataAnggota(){
+        buka_koneksi();
+        String inputAnggota = "INSERT INTO `nasabah` (`id_nasabah`, `nama`, `no_telp`, `alamat`) VALUES (NULL, "
+                + "'"+namaField.getText()+"', "
+                + "'"+telpField.getText()+"', "
+                + "'"+alamatField.getText()+"')";
+        try {
+            PreparedStatement inputStatement = koneksi.prepareStatement(inputAnggota);
+            inputStatement.executeUpdate();
+            inputStatement.close();
+            System.out.println("inserted");
+            ambil_data_anggota();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Terjadi "+e.getMessage());
+        }
+    }
+    public void editDataAnggota(String i){
+        buka_koneksi();
+        String updateAnggota = "UPDATE `nasabah` SET `nama` = "
+                + "'"+namaField.getText()+"', `no_telp` = '"+telpField.getText()+"', `alamat` = '"+alamatField.getText()+"' WHERE `nasabah`.`nama` = '"+i+"'";
+        try {
+            PreparedStatement inputStatement = koneksi.prepareStatement(updateAnggota);
+            inputStatement.executeUpdate();
+            inputStatement.close();
+            System.out.println(i+" Has Edited");
+            ambil_data_anggota();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Terjadi "+e.getMessage());
+        }
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -83,6 +113,7 @@ public class anggota extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        anggotaGrpup = new javax.swing.ButtonGroup();
         jLabel1 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         anggotaTable = new javax.swing.JTable();
@@ -95,7 +126,10 @@ public class anggota extends javax.swing.JFrame {
         alamatField = new javax.swing.JTextArea();
         tambahButton = new javax.swing.JButton();
         refreshButton = new javax.swing.JButton();
-        refreshButton1 = new javax.swing.JButton();
+        editButton = new javax.swing.JButton();
+        hapusButton = new javax.swing.JButton();
+        jRadioButton1 = new javax.swing.JRadioButton();
+        jRadioButton2 = new javax.swing.JRadioButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -151,11 +185,35 @@ public class anggota extends javax.swing.JFrame {
             }
         });
 
-        refreshButton1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        refreshButton1.setText("home");
-        refreshButton1.addActionListener(new java.awt.event.ActionListener() {
+        editButton.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        editButton.setText("Edit");
+        editButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                refreshButton1ActionPerformed(evt);
+                editButtonActionPerformed(evt);
+            }
+        });
+
+        hapusButton.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        hapusButton.setText("Hapus");
+        hapusButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                hapusButtonActionPerformed(evt);
+            }
+        });
+
+        anggotaGrpup.add(jRadioButton1);
+        jRadioButton1.setText("Anggota Lama");
+        jRadioButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jRadioButton1ActionPerformed(evt);
+            }
+        });
+
+        anggotaGrpup.add(jRadioButton2);
+        jRadioButton2.setText("Anggota Baru");
+        jRadioButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jRadioButton2ActionPerformed(evt);
             }
         });
 
@@ -169,23 +227,34 @@ public class anggota extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(19, 19, 19)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel3)
-                                    .addComponent(jLabel2)
-                                    .addComponent(jLabel4))
-                                .addGap(28, 28, 28)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(namaField)
-                                    .addComponent(telpField)
-                                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(53, 53, 53)
-                                .addComponent(refreshButton1)
-                                .addGap(18, 18, 18)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(jLabel3)
+                                            .addComponent(jLabel2)
+                                            .addComponent(jLabel4))
+                                        .addGap(28, 28, 28)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addGap(131, 131, 131)
+                                                .addComponent(jRadioButton2))
+                                            .addComponent(jRadioButton1)
+                                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                                .addComponent(namaField)
+                                                .addComponent(telpField)
+                                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(tambahButton)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(editButton)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(hapusButton)
+                                        .addGap(4, 4, 4)))
+                                .addGap(29, 29, 29))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addContainerGap()
                                 .addComponent(refreshButton)
-                                .addGap(18, 18, 18)
-                                .addComponent(tambahButton)))
-                        .addGap(29, 29, 29)
+                                .addGap(92, 92, 92)))
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 337, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(228, 228, 228)
@@ -201,7 +270,7 @@ public class anggota extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 344, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addContainerGap(20, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel2)
@@ -214,12 +283,18 @@ public class anggota extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel4)
                             .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jRadioButton1)
+                            .addComponent(jRadioButton2))
+                        .addGap(29, 29, 29)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(tambahButton)
-                            .addComponent(refreshButton)
-                            .addComponent(refreshButton1))
-                        .addGap(93, 93, 93))))
+                            .addComponent(editButton)
+                            .addComponent(hapusButton))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(refreshButton)
+                        .addGap(29, 29, 29))))
         );
 
         pack();
@@ -232,35 +307,40 @@ public class anggota extends javax.swing.JFrame {
 
     private void tambahButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tambahButtonActionPerformed
         // TODO add your handling code here:
-        buka_koneksi();
-        String inputAnggota = "INSERT INTO `nasabah` (`id_nasabah`, `nama`, `no_telp`, `alamat`) VALUES (NULL, "
-                + "'"+namaField.getText()+"', "
-                + "'"+telpField.getText()+"', "
-                + "'"+alamatField.getText()+"')";
-        try {
-            PreparedStatement inputStatement = koneksi.prepareStatement(inputAnggota);
-            inputStatement.executeUpdate();
-            inputStatement.close();
-            System.out.println("inserted");
-            ambil_data_anggota();
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Terjadi "+e.getMessage());
-        }
+        insertDataAnggota();
     }//GEN-LAST:event_tambahButtonActionPerformed
-
-    private void refreshButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refreshButton1ActionPerformed
-        // TODO add your handling code here:
-        dispose();
-    }//GEN-LAST:event_refreshButton1ActionPerformed
 
     private void anggotaTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_anggotaTableMouseClicked
         // TODO add your handling code here:
         int i = anggotaTable.getSelectedRow();
-        System.out.println(model.getValueAt(i, 0).toString());
-        System.out.println(model.getValueAt(i, 1).toString());
-        System.out.println(model.getValueAt(i, 2).toString());
-        
+        namaField.setText(model.getValueAt(i, 0).toString());
+        telpField.setText(model.getValueAt(i, 1).toString());
+        alamatField.setText(model.getValueAt(i, 2).toString());
     }//GEN-LAST:event_anggotaTableMouseClicked
+
+    private void editButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editButtonActionPerformed
+        // TODO add your handling code here:
+        int i = anggotaTable.getSelectedRow();
+        String namaAnggota = model.getValueAt(i, 0).toString();
+        if (i >= 0) {
+            editDataAnggota(namaAnggota);
+            
+        } else {
+            System.out.println("Error");
+        }
+    }//GEN-LAST:event_editButtonActionPerformed
+
+    private void hapusButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_hapusButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_hapusButtonActionPerformed
+
+    private void jRadioButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jRadioButton1ActionPerformed
+
+    private void jRadioButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton2ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jRadioButton2ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -299,16 +379,20 @@ public class anggota extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextArea alamatField;
+    private javax.swing.ButtonGroup anggotaGrpup;
     private javax.swing.JTable anggotaTable;
+    private javax.swing.JButton editButton;
+    private javax.swing.JButton hapusButton;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JRadioButton jRadioButton1;
+    private javax.swing.JRadioButton jRadioButton2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTextField namaField;
     private javax.swing.JButton refreshButton;
-    private javax.swing.JButton refreshButton1;
     private javax.swing.JButton tambahButton;
     private javax.swing.JTextField telpField;
     // End of variables declaration//GEN-END:variables
