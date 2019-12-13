@@ -15,8 +15,10 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.ButtonModel;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import controller.*;
 
 /**
  *
@@ -27,15 +29,17 @@ public class anggota extends javax.swing.JFrame {
     /**
      * Creates new form anggota
      */
+    Anggota anggota = new Anggota();
     private static Connection koneksi;
     private DefaultTableModel model;
     public anggota() {
         initComponents();
         model = new DefaultTableModel();
         this.anggotaTable.setModel(model);
-        model.addColumn("nama");
-        model.addColumn("no hp");
-        model.addColumn("alamat");
+        model.addColumn("Nama");
+        model.addColumn("No Telp");
+        model.addColumn("Alamat");
+        model.addColumn("Anggota");
         ambil_data_anggota();
         
     }
@@ -48,10 +52,11 @@ public class anggota extends javax.swing.JFrame {
             String sql = "SELECT * FROM `nasabah`";
             ResultSet r = s.executeQuery(sql);
             while (r.next()) {      
-                Object[] o = new Object[3];
+                Object[] o = new Object[4];
                 o[0] = r.getString("nama");
                 o[1] = r.getString("no_telp");
                 o[2] = r.getString("alamat");
+                o[3] = r.getString("jenis_anggota");
                 model.addRow(o);
             }
             r.close();
@@ -76,10 +81,16 @@ public class anggota extends javax.swing.JFrame {
     }
     public void insertDataAnggota(){
         buka_koneksi();
-        String inputAnggota = "INSERT INTO `nasabah` (`id_nasabah`, `nama`, `no_telp`, `alamat`) VALUES (NULL, "
+        String inputAnggota1 = "INSERT INTO `nasabah` (`id_nasabah`, `nama`, `no_telp`, `alamat`, 'jenis_anggota') VALUES (NULL, "
                 + "'"+namaField.getText()+"', "
                 + "'"+telpField.getText()+"', "
-                + "'"+alamatField.getText()+"')";
+                + "'"+alamatField.getText()+"', "
+                + "'"+anggotaCombo.getSelectedItem().toString()+"')";
+        String inputAnggota = "INSERT INTO `nasabah` (`id_nasabah`, `nama`, `no_telp`, `alamat`, `jenis_anggota`) VALUES (NULL, "
+                + "'"+namaField.getText()+"',"
+                + "'"+telpField.getText()+"',"
+                + "'"+alamatField.getText()+"',"
+                + "'"+anggotaCombo.getSelectedItem().toString()+"')";
         try {
             PreparedStatement inputStatement = koneksi.prepareStatement(inputAnggota);
             inputStatement.executeUpdate();
@@ -92,8 +103,18 @@ public class anggota extends javax.swing.JFrame {
     }
     public void editDataAnggota(String i){
         buka_koneksi();
-        String updateAnggota = "UPDATE `nasabah` SET `nama` = "
-                + "'"+namaField.getText()+"', `no_telp` = '"+telpField.getText()+"', `alamat` = '"+alamatField.getText()+"' WHERE `nasabah`.`nama` = '"+i+"'";
+        String exepct;
+        String updateAnggot = "UPDATE `nasabah` SET `nama` = "
+                + "'"+namaField.getText()+"', "
+                + "`no_telp` = '"+telpField.getText()+"',"
+                + "`alamat` = '"+alamatField.getText()+"',"
+                + "'jenis_anggota' = '"+anggotaCombo.getSelectedItem().toString()+"'"
+                + " WHERE `nasabah`.`nama` = '"+i+"'";
+        String updateAnggota = "UPDATE `nasabah` SET `nama` = '"+namaField.getText()+"',"
+                + "`no_telp` = '"+telpField.getText()+"',"
+                + "`alamat` = '"+alamatField.getText()+"',"
+                + "`jenis_anggota` = '"+anggotaCombo.getSelectedItem().toString()+"'"
+                + " WHERE `nasabah`.`nama` = '"+i+"'";
         try {
             PreparedStatement inputStatement = koneksi.prepareStatement(updateAnggota);
             inputStatement.executeUpdate();
@@ -102,7 +123,24 @@ public class anggota extends javax.swing.JFrame {
             ambil_data_anggota();
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Terjadi "+e.getMessage());
+            exepct = e.getMessage();
         }
+    }
+    public void deleteAnggota(String i){
+        buka_koneksi();
+        String exepct;
+        String deleteAnggota = "DELETE FROM `nasabah` WHERE `nasabah`.`nama` = '"+i+"'";
+        try {
+            PreparedStatement deleteStatement = koneksi.prepareCall(deleteAnggota);
+            deleteStatement.executeUpdate();
+            deleteStatement.close();
+            System.out.println(i+" Has Deleted");
+            ambil_data_anggota();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Terjadi "+e.getMessage());
+            exepct = e.getMessage();
+        }
+        
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -128,8 +166,8 @@ public class anggota extends javax.swing.JFrame {
         refreshButton = new javax.swing.JButton();
         editButton = new javax.swing.JButton();
         hapusButton = new javax.swing.JButton();
-        jRadioButton1 = new javax.swing.JRadioButton();
-        jRadioButton2 = new javax.swing.JRadioButton();
+        anggotaCombo = new javax.swing.JComboBox<>();
+        jLabel5 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -186,7 +224,7 @@ public class anggota extends javax.swing.JFrame {
         });
 
         editButton.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        editButton.setText("Edit");
+        editButton.setText("Update");
         editButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 editButtonActionPerformed(evt);
@@ -201,21 +239,11 @@ public class anggota extends javax.swing.JFrame {
             }
         });
 
-        anggotaGrpup.add(jRadioButton1);
-        jRadioButton1.setText("Anggota Lama");
-        jRadioButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jRadioButton1ActionPerformed(evt);
-            }
-        });
+        anggotaCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Anggota Lama", "Anggota Baru" }));
+        anggotaCombo.setSelectedIndex(-1);
 
-        anggotaGrpup.add(jRadioButton2);
-        jRadioButton2.setText("Anggota Baru");
-        jRadioButton2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jRadioButton2ActionPerformed(evt);
-            }
-        });
+        jLabel5.setFont(new java.awt.Font("Segoe UI", 0, 12)); // NOI18N
+        jLabel5.setText("Anggota");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -224,42 +252,38 @@ public class anggota extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(19, 19, 19)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel3)
+                                    .addComponent(jLabel2)
+                                    .addComponent(jLabel4)
+                                    .addComponent(jLabel5))
+                                .addGap(28, 28, 28)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(namaField)
+                                    .addComponent(telpField)
                                     .addGroup(layout.createSequentialGroup()
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(jLabel3)
-                                            .addComponent(jLabel2)
-                                            .addComponent(jLabel4))
-                                        .addGap(28, 28, 28)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addGroup(layout.createSequentialGroup()
-                                                .addGap(131, 131, 131)
-                                                .addComponent(jRadioButton2))
-                                            .addComponent(jRadioButton1)
-                                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                                .addComponent(namaField)
-                                                .addComponent(telpField)
-                                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(0, 0, Short.MAX_VALUE))
+                                    .addComponent(anggotaCombo, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                .addGap(41, 41, 41)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(refreshButton)
                                     .addGroup(layout.createSequentialGroup()
                                         .addComponent(tambahButton)
                                         .addGap(18, 18, 18)
-                                        .addComponent(editButton)
-                                        .addGap(18, 18, 18)
-                                        .addComponent(hapusButton)
-                                        .addGap(4, 4, 4)))
-                                .addGap(29, 29, 29))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addComponent(refreshButton)
-                                .addGap(92, 92, 92)))
+                                        .addComponent(editButton)))
+                                .addGap(18, 18, 18)
+                                .addComponent(hapusButton)))
+                        .addGap(33, 33, 33)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 337, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(228, 228, 228)
                         .addComponent(jLabel1)))
-                .addContainerGap(26, Short.MAX_VALUE))
+                .addContainerGap(17, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -268,9 +292,7 @@ public class anggota extends javax.swing.JFrame {
                 .addComponent(jLabel1)
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 344, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(20, Short.MAX_VALUE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 344, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel2)
@@ -285,16 +307,16 @@ public class anggota extends javax.swing.JFrame {
                             .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jRadioButton1)
-                            .addComponent(jRadioButton2))
-                        .addGap(29, 29, 29)
+                            .addComponent(anggotaCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel5))
+                        .addGap(32, 32, 32)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(tambahButton)
                             .addComponent(editButton)
                             .addComponent(hapusButton))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(refreshButton)
-                        .addGap(29, 29, 29))))
+                        .addGap(18, 18, 18)
+                        .addComponent(refreshButton)))
+                .addContainerGap(20, Short.MAX_VALUE))
         );
 
         pack();
@@ -302,7 +324,8 @@ public class anggota extends javax.swing.JFrame {
 
     private void refreshButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refreshButtonActionPerformed
         // TODO add your handling code here:
-        ambil_data_anggota();
+//        ambil_data_anggota();
+        System.out.println(anggotaCombo.getSelectedItem().toString());
     }//GEN-LAST:event_refreshButtonActionPerformed
 
     private void tambahButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tambahButtonActionPerformed
@@ -312,10 +335,14 @@ public class anggota extends javax.swing.JFrame {
 
     private void anggotaTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_anggotaTableMouseClicked
         // TODO add your handling code here:
+        if (evt.getClickCount() == 2 && !evt.isConsumed()) {
+            System.out.println("Doble kill");
+        }
         int i = anggotaTable.getSelectedRow();
         namaField.setText(model.getValueAt(i, 0).toString());
         telpField.setText(model.getValueAt(i, 1).toString());
         alamatField.setText(model.getValueAt(i, 2).toString());
+        anggotaCombo.setSelectedItem(model.getValueAt(i, 3).toString());
     }//GEN-LAST:event_anggotaTableMouseClicked
 
     private void editButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editButtonActionPerformed
@@ -324,23 +351,27 @@ public class anggota extends javax.swing.JFrame {
         String namaAnggota = model.getValueAt(i, 0).toString();
         if (i >= 0) {
             editDataAnggota(namaAnggota);
-            
         } else {
             System.out.println("Error");
+            
         }
     }//GEN-LAST:event_editButtonActionPerformed
 
     private void hapusButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_hapusButtonActionPerformed
         // TODO add your handling code here:
+        int i = anggotaTable.getSelectedRow();
+        String boom ;
+        String namaAnggota = model.getValueAt(i, 0).toString();
+        if (i>=0 ) {
+            deleteAnggota(namaAnggota);
+            namaField.setText("");
+            telpField.setText("");
+            alamatField.setText("");
+            anggotaCombo.setSelectedItem("");
+        } else {
+        System.out.println("Errorr");
+        }
     }//GEN-LAST:event_hapusButtonActionPerformed
-
-    private void jRadioButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jRadioButton1ActionPerformed
-
-    private void jRadioButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton2ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jRadioButton2ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -379,6 +410,7 @@ public class anggota extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextArea alamatField;
+    private javax.swing.JComboBox<String> anggotaCombo;
     private javax.swing.ButtonGroup anggotaGrpup;
     private javax.swing.JTable anggotaTable;
     private javax.swing.JButton editButton;
@@ -387,8 +419,7 @@ public class anggota extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JRadioButton jRadioButton1;
-    private javax.swing.JRadioButton jRadioButton2;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTextField namaField;
