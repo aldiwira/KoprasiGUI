@@ -24,7 +24,7 @@ import controller.*;
  *
  * @author Aldi Wirawan
  */
-public class anggota extends javax.swing.JFrame {
+public class anggotaGUI extends javax.swing.JFrame {
 
     /**
      * Creates new form anggota
@@ -32,7 +32,7 @@ public class anggota extends javax.swing.JFrame {
     Anggota anggota = new Anggota();
     private static Connection koneksi;
     private DefaultTableModel model;
-    public anggota() {
+    public anggotaGUI() {
         initComponents();
         model = new DefaultTableModel();
         this.anggotaTable.setModel(model);
@@ -75,7 +75,7 @@ public class anggota extends javax.swing.JFrame {
             DriverManager.registerDriver(new com.mysql.jdbc.Driver());
             koneksi = (Connection) DriverManager.getConnection(url, user, password);
             } catch (SQLException ex) {
-                Logger.getLogger(anggota.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(anggotaGUI.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }
@@ -270,14 +270,16 @@ public class anggota extends javax.swing.JFrame {
                                     .addComponent(anggotaCombo, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                             .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                                 .addGap(41, 41, 41)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(refreshButton)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(52, 52, 52)
+                                        .addComponent(refreshButton, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addGroup(layout.createSequentialGroup()
                                         .addComponent(tambahButton)
                                         .addGap(18, 18, 18)
-                                        .addComponent(editButton)))
-                                .addGap(18, 18, 18)
-                                .addComponent(hapusButton)))
+                                        .addComponent(editButton)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(hapusButton)))))
                         .addGap(33, 33, 33)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 337, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
@@ -324,8 +326,8 @@ public class anggota extends javax.swing.JFrame {
 
     private void refreshButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refreshButtonActionPerformed
         // TODO add your handling code here:
-//        ambil_data_anggota();
-        System.out.println(anggotaCombo.getSelectedItem().toString());
+        ambil_data_anggota();
+//        System.out.println(anggotaCombo.getSelectedItem().toString());
     }//GEN-LAST:event_refreshButtonActionPerformed
 
     private void tambahButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tambahButtonActionPerformed
@@ -335,9 +337,6 @@ public class anggota extends javax.swing.JFrame {
 
     private void anggotaTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_anggotaTableMouseClicked
         // TODO add your handling code here:
-        if (evt.getClickCount() == 2 && !evt.isConsumed()) {
-            System.out.println("Doble kill");
-        }
         int i = anggotaTable.getSelectedRow();
         namaField.setText(model.getValueAt(i, 0).toString());
         telpField.setText(model.getValueAt(i, 1).toString());
@@ -390,20 +389,21 @@ public class anggota extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(anggota.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(anggotaGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(anggota.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(anggotaGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(anggota.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(anggotaGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(anggota.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(anggotaGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new anggota().setVisible(true);
+                new anggotaGUI().setVisible(true);
             }
         });
     }

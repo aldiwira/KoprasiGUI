@@ -154,7 +154,7 @@ public class login extends javax.swing.JFrame {
 
     private void AnggotaButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AnggotaButtonActionPerformed
         // TODO add your handling code here:
-        new anggota().setVisible(true);
+        new anggotaGUI().setVisible(true);
     }//GEN-LAST:event_AnggotaButtonActionPerformed
 
     /**

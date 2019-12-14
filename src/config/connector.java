@@ -5,14 +5,39 @@
  */
 package config;
 
+import com.mysql.jdbc.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+
+
 /**
  *
  * @author Aldi Wirawan
  */
-public class connector {
+public final class connector {
+    private static Connection koneksi;
+
+    public connector() {
+        this.getConnection();
+    }
     
-    private final String url = "jdbc:mysql://localhost:3306/pbo";
-    private final String user = "root";
-    private final String password = "";
+    public Connection getConnection(){
+        if(koneksi == null){
+            try {
+                String url = "jdbc:mysql://localhost:3306/pbo";
+                String user = "root";
+                String password = "";
+                DriverManager.registerDriver(new com.mysql.jdbc.Driver());
+                koneksi = (com.mysql.jdbc.Connection) DriverManager.getConnection(url, user, password);
+                return koneksi;
+            } catch (SQLException ex) {
+                Logger.getLogger(connector.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return null;
+    }
     
 }

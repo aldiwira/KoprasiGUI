@@ -10,13 +10,40 @@ package controller;
  * @author Aldi Wirawan
  */
 public class Anggota{
+    private int id;
     private String nama;
     private String alamat;
     private String no;
+    private String type;
     private int totalSimpanan;
     private int uangSimpanan;
     private int uangPinjaman;
+    private int uangAngsuran;
     private int bulan;
+
+    public int getUangAngsuran() {
+        return uangAngsuran;
+    }
+
+    public void setUangAngsuran(int uangAngsuran) {
+        this.uangAngsuran = uangAngsuran;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public int getTotalSimpanan() {
         return totalSimpanan;
