@@ -68,8 +68,8 @@ public class simpananDb {
             while (rs.next()) {                
                 sDb.setId_simpan(rs.getInt("id_pinjaman"));
                 sDb.setId_nasabah(rs.getInt("id_nasabah"));
-                sDb.setJumlah_simpan(rs.getInt("jumlah_simpanan"));
-                sDb.setUang_simpan(rs.getInt("uang_simpanan"));
+                sDb.setJumlah_simpan(rs.getInt("simpanan"));
+                sDb.setUang_simpan(rs.getInt("total_simpanan"));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -83,4 +83,20 @@ public class simpananDb {
         AnggotaService.insertQueryGetId(queryInsert);
         System.out.println("Inserted");
     }
+     public Anggota getBy(String where, String value){
+        Anggota ag = new Anggota();
+//        select sum(simpanan) from simpanan WHERE id_nasabah = 12
+        String query = "SELECT sum(simpanan) as sumsum FROM `simpanan` WHERE `"+where+"` = '"+value+"'";
+        ResultSet rs = AnggotaService.selectQuery(query);
+        try {
+            while (rs.next()) {                
+                ag = new Anggota();
+                ag.setTotalSimpanan(rs.getInt("sumsum"));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return ag;
+    }
 }
+

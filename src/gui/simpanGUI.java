@@ -35,6 +35,7 @@ public class simpanGUI extends javax.swing.JFrame {
         getAnggotaBox();
     }
     
+    
     public void getAnggotaBox(){
         ArrayList<Anggota> listAnggota = new anggotaDb().getAll();
         Object rowData[] = new Object[1];
@@ -45,12 +46,20 @@ public class simpanGUI extends javax.swing.JFrame {
     }
     public void setAnggotaData(String nama){
         Anggota ag = new anggotaDb().getBy("nama", nama);
+//        totalSimpan.setText("Rp."+formatCurrency(Integer.toString(as.getTotalSimpanan())));
         idField.setText(Integer.toString(ag.getId()));
         telpLabel.setText(ag.getNo());
         alamatField.setText(ag.getAlamat());
         anggotaField.setText(ag.getType());
+        Anggota as = new simpananDb().getBy("id_nasabah", idField.getText());
+        totalSimpan.setText("Rp."+formatCurrency(Integer.toString(as.getTotalSimpanan())));
     }
-    
+    public int getSimpanan(){
+        int i;
+        Anggota as = new simpananDb().getBy("id_nasabah", idField.getText() );
+        i = as.getTotalSimpanan();
+        return i;
+    }
     public void setDataSimpanan(Anggota ag){
         simpananDb sdb = new simpananDb();
         Random random = new Random();
@@ -102,6 +111,11 @@ public class simpanGUI extends javax.swing.JFrame {
         simpananField = new javax.swing.JLabel();
         jLabel15 = new javax.swing.JLabel();
         totalSimpanan = new javax.swing.JLabel();
+        jButton1 = new javax.swing.JButton();
+        uangSimpan1 = new javax.swing.JLabel();
+        jLabel22 = new javax.swing.JLabel();
+        totalSimpan = new javax.swing.JLabel();
+        totalSimpan1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -254,6 +268,29 @@ public class simpanGUI extends javax.swing.JFrame {
                 .addContainerGap(46, Short.MAX_VALUE))
         );
 
+        jButton1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jButton1.setText("Home");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
+        uangSimpan1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        uangSimpan1.setText("Total Simpan");
+
+        jLabel22.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jLabel22.setText(":");
+
+        totalSimpan.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        totalSimpan.setText("Rp.");
+
+        totalSimpan1.setBackground(new java.awt.Color(255, 255, 255));
+        totalSimpan1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        totalSimpan1.setForeground(new java.awt.Color(255, 255, 255));
+        totalSimpan1.setText("0");
+        totalSimpan1.setEnabled(false);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -262,44 +299,62 @@ public class simpanGUI extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(LabelSimpan)
                 .addGap(266, 266, 266))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+            .addGroup(layout.createSequentialGroup()
                 .addGap(39, 39, 39)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1)
-                            .addComponent(jLabel3)
-                            .addComponent(jLabel5)
-                            .addComponent(jLabel10))
-                        .addGap(33, 33, 33)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(anggotaField))
+                        .addGap(10, 10, 10)
+                        .addComponent(totalSimpan1)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(jLabel1)
+                                    .addComponent(jLabel3)
+                                    .addComponent(jLabel5)
+                                    .addComponent(jLabel10))
+                                .addGap(33, 33, 33)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(anggotaBox, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(telpLabel)
-                                    .addComponent(idField)))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(alamatField)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 82, Short.MAX_VALUE)
-                        .addComponent(uangSimpan)
-                        .addGap(33, 33, 33)
-                        .addComponent(jLabel21, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(simpanButton, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(pinjamanField, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addGap(43, 43, 43))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(anggotaField))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(anggotaBox, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(telpLabel)
+                                            .addComponent(idField)))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(alamatField)))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 82, Short.MAX_VALUE)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jButton1)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(simpanButton, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(uangSimpan)
+                                            .addComponent(uangSimpan1))
+                                        .addGap(33, 33, 33)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addComponent(jLabel22, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                .addComponent(totalSimpan))
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addComponent(jLabel21, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                .addComponent(pinjamanField, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)))))))
+                        .addGap(43, 43, 43))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -313,8 +368,11 @@ public class simpanGUI extends javax.swing.JFrame {
                             .addComponent(uangSimpan)
                             .addComponent(jLabel21)
                             .addComponent(pinjamanField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(42, 42, 42)
-                        .addComponent(simpanButton))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(uangSimpan1)
+                            .addComponent(jLabel22)
+                            .addComponent(totalSimpan)))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel1)
@@ -331,15 +389,19 @@ public class simpanGUI extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel5)
                             .addComponent(jLabel6)
-                            .addComponent(alamatField))
+                            .addComponent(alamatField)
+                            .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(simpanButton))
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(anggotaField)
                             .addComponent(jLabel8)
                             .addComponent(jLabel10))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 16, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 7, Short.MAX_VALUE)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(39, 39, 39))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(totalSimpan1)
+                .addGap(13, 13, 13))
         );
 
         pack();
@@ -348,18 +410,19 @@ public class simpanGUI extends javax.swing.JFrame {
     private void simpanButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_simpanButtonActionPerformed
         // TODO add your handling code here:
         action fungsi = new action();
+        String i;
         if (anggotaField.getText().equalsIgnoreCase("anggota lama")) {
             AnggotaLama anggota = new AnggotaLama();
             anggota.setId(Integer.parseInt(idField.getText()));
             anggota.setUangSimpanan(Integer.parseInt(pinjamanField.getText()));
-            anggota.setTotalSimpanan(fungsi.simpanan(anggota));
+            anggota.setTotalSimpanan(getSimpanan()+fungsi.simpanan(anggota));
             setDataSimpanan(anggota);
             
         } else if (anggotaField.getText().equalsIgnoreCase("anggota baru")){
             AnggotaBaru anggota = new AnggotaBaru();
             anggota.setId(Integer.parseInt(idField.getText()));
             anggota.setUangSimpanan(Integer.parseInt(pinjamanField.getText()));
-            anggota.setTotalSimpanan(fungsi.simpanan(anggota));
+            anggota.setTotalSimpanan(getSimpanan()+fungsi.simpanan(anggota));
             setDataSimpanan(anggota);
         }
     }//GEN-LAST:event_simpanButtonActionPerformed
@@ -372,6 +435,12 @@ public class simpanGUI extends javax.swing.JFrame {
             setAnggotaData(anggotaBox.getSelectedItem().toString());
         }
     }//GEN-LAST:event_anggotaBoxActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        new login().setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -414,6 +483,7 @@ public class simpanGUI extends javax.swing.JFrame {
     private javax.swing.JComboBox<String> anggotaBox;
     private javax.swing.JLabel anggotaField;
     private javax.swing.JLabel idField;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -422,6 +492,7 @@ public class simpanGUI extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel21;
+    private javax.swing.JLabel jLabel22;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
@@ -435,7 +506,10 @@ public class simpanGUI extends javax.swing.JFrame {
     private javax.swing.JButton simpanButton;
     private javax.swing.JLabel simpananField;
     private javax.swing.JLabel telpLabel;
+    private javax.swing.JLabel totalSimpan;
+    private javax.swing.JLabel totalSimpan1;
     private javax.swing.JLabel totalSimpanan;
     private javax.swing.JLabel uangSimpan;
+    private javax.swing.JLabel uangSimpan1;
     // End of variables declaration//GEN-END:variables
 }

@@ -29,42 +29,7 @@ public class login extends javax.swing.JFrame {
     public login() {
         initComponents();
     }
-    public void buka_koneksi(){
-        if(koneksi == null){
-            try {
-            String url = "jdbc:mysql://localhost:3306/pbo";
-            String user = "root";
-            String password = "";
-            DriverManager.registerDriver(new com.mysql.jdbc.Driver());
-            koneksi = (com.mysql.jdbc.Connection) DriverManager.getConnection(url, user, password);
-            } catch (SQLException ex) {
-                Logger.getLogger(login.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-    }
-    private void ambil_data_table(){
-        model.getDataVector().removeAllElements();
-        model.fireTableDataChanged();
-        try {
-            buka_koneksi();
-            Statement s = koneksi.createStatement();
-            String sql = "SELECT * FROM `anggota`";
-            ResultSet r = s.executeQuery(sql);
-            while (r.next()) {                
-                Object[] o = new Object[4];
-                o[0] = r.getString("id");
-                o[1] = r.getString("nama");
-                o[2] = r.getString("alamat");
-                o[3] = r.getString("telp");
-                model.addRow(o);
-            }
-            r.close();
-            s.close();
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(this,"Terjadi kesalahan " + e.getMessage());
-
-        }
-    }
+    
     
     /**
      * This method is called from within the constructor to initialize the form.
@@ -145,16 +110,24 @@ public class login extends javax.swing.JFrame {
 
     private void pinjamanButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pinjamanButtonActionPerformed
         // TODO add your handling code here:
+        
+        new PinjamGUI().setVisible(true);
+        this.dispose();
+        
     }//GEN-LAST:event_pinjamanButtonActionPerformed
 
     private void simpananButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_simpananButtonActionPerformed
         // TODO add your handling code here:
-        new simpan().setVisible(true);
+        
+        new simpanGUI().setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_simpananButtonActionPerformed
 
     private void AnggotaButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AnggotaButtonActionPerformed
         // TODO add your handling code here:
+
         new anggotaGUI().setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_AnggotaButtonActionPerformed
 
     /**
